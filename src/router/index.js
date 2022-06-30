@@ -20,11 +20,17 @@ const routes = [
     name: 'login',
     component: () => import(/* webpackChunkName: "about" */ '../views/LoginPage.vue'),
   },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => import(/* webpackChunkName: "about" */ '../views/DashBoard.vue'),
+  },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+  linkActiveClass: 'active',
 });
 
 export default router;

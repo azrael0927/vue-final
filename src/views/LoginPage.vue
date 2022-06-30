@@ -73,9 +73,11 @@ export default {
     signin() {
       const api = `${process.env.VUE_APP_API}admin/signin`;
       this.$http.post(api, this.user).then((res) => {
-        const { token, expired } = res.data;
-        console.log(token, new Date(expired));
-        document.cookie = `vf-token=${token}; expires=${new Date(expired)}`;
+        if (res.data.success) {
+          const { token, expired } = res.data;
+          document.cookie = `vf-token=${token}; expires=${new Date(expired)}`;
+          this.$router.push('/dashboard');
+        }
       });
     },
     remeberMe() {
