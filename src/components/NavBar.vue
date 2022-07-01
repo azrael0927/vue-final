@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <a class="navbar-brand" href="#">試試看</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -38,9 +38,6 @@
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
           </li> -->
         </ul>
       </div>
@@ -57,8 +54,10 @@ export default {
     logout() {
       const api = `${process.env.VUE_APP_API}logout`;
       this.$http.post(api).then((res) => {
-        this.$router.push('/login');
-        console.log(res);
+        if (res.data.success) {
+          this.$router.push('/login');
+          console.log(res.data.success);
+        }
       });
     },
   },

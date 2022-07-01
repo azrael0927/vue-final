@@ -40,7 +40,13 @@
           />
           記住我
         </label>
-        <button type="sumbit" class="btn btn-dark">登入</button>
+        <button type="sumbit" class="btn btn-dark">
+          登入
+          <div class="spinner-grow spinner-grow-sm text-light"
+          role="status" v-if="isLoading">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </button>
       </div>
     </form>
   </div>
@@ -67,17 +73,20 @@ export default {
         username: '',
         password: '',
       },
+      isLoading: false,
     };
   },
   methods: {
     signin() {
       const api = `${process.env.VUE_APP_API}admin/signin`;
+      this.isLoading = true;
       this.$http.post(api, this.user).then((res) => {
         if (res.data.success) {
           const { token, expired } = res.data;
           document.cookie = `vf-token=${token}; expires=${new Date(expired)}`;
           this.$router.push('/dashboard');
         }
+        this.isLoading = false;
       });
     },
     remeberMe() {
