@@ -62,6 +62,10 @@
   @update-product="updateProduct"
   ref="productModal"
   />
+  <PagiNation
+  :pages="pagination"
+  @change-page="getProducts"
+  />
 </template>
 
 <style scoped>
@@ -81,6 +85,7 @@
 import DashboardSidebar from '../components/DashboardSidebar.vue';
 import ProductModal from '../components/ProductModal.vue';
 import DelModal from '../components/DelModal.vue';
+import PagiNation from '../components/PagiNation.vue';
 
 export default {
   data() {
@@ -96,6 +101,7 @@ export default {
     DashboardSidebar,
     ProductModal,
     DelModal,
+    PagiNation,
   },
   methods: {
     getProducts(page = 1) {
