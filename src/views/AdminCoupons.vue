@@ -15,27 +15,27 @@
   </VueLoading>
   <div class="d-flex">
     <DashboardSidebar />
-    <h3 class="fs-2 fw-bold">商品管理</h3>
-    <button class="btn btn-dark" @click="openProductModal">新增商品</button>
+    <h3 class="fs-2 fw-bold">優惠管理</h3>
+    <button class="btn btn-dark" @click="openCouponModal">新增優惠券</button>
   </div>
   <div class="table-responsive">
     <table class="table table-striped text-center">
       <thead>
         <tr>
-          <th>分類</th>
-          <th class="col-4">品名</th>
-          <th>原價</th>
-          <th>售價</th>
+          <th>名稱</th>
+          <th>優惠</th>
+          <th>優惠碼</th>
+          <th>到期日</th>
           <th>啟用</th>
           <th class="col-lg-2">編輯</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in products" :key="item.id">
-          <td>{{item.category}}</td>
+        <tr v-for="item in coupons" :key="item.id">
           <td>{{item.title}}</td>
-          <td>{{$filter.currency(item.origin_price)}}</td>
-          <td>{{$filter.currency(item.price)}}</td>
+          <td>{{item.percent}}</td>
+          <td>{{item.code}}</td>
+          <td>{{$filter.date(item.due_date)}}</td>
           <td>
             <span class="text-success" v-if="item.is_enabled">啟用</span>
             <span class="text-danger" v-else>未啟用</span>
@@ -43,7 +43,7 @@
           <td class="">
             <div class="btn-group" role="group" aria-label="Basic mixed styles">
               <button type="button" class="btn btn-outline-dark"
-              @click="openProductModal(item)">編輯</button>
+              @click="openCouponModal(item)">編輯</button>
               <button type="button" class="btn btn-outline-danger"
               @click="openDelModal(item)">刪除</button>
             </div>
@@ -52,19 +52,19 @@
       </tbody>
     </table>
   </div>
+  <CouponModal
+  :coupon="tempCoupon"
+  @update-coupon="updateCoupon"
+  ref="couponModal"/>
   <DelModal
-  :item="tempProduct"
+  :item="tempCoupon"
   :del="isDel"
-  @del-item="delProduct"
-  ref="delModal"/>
-  <ProductModal
-  :product="tempProduct"
-  @update-product="updateProduct"
-  ref="productModal"
+  @del-item="delCoupon"
+  ref="delModal"
   />
   <PagiNation
   :pages="pagination"
-  @change-page="getProducts"
+  @change-page="getCoupons"
   />
 </template>
 
@@ -83,79 +83,80 @@
 
 <script>
 import DashboardSidebar from '../components/DashboardSidebar.vue';
-import ProductModal from '../components/ProductModal.vue';
+import CouponModal from '../components/CouponModal.vue';
 import DelModal from '../components/DelModal.vue';
 import PagiNation from '../components/PagiNation.vue';
 
 export default {
   data() {
     return {
-      products: [],
+      coupons: [],
       pagination: {},
-      tempProduct: {},
+      tempCoupon: {},
       isLoading: false,
       isDel: false,
     };
   },
   components: {
     DashboardSidebar,
-    ProductModal,
+    CouponModal,
     DelModal,
     PagiNation,
   },
   methods: {
-    getProducts(page = 1) {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`;
+    getCoupons(page = 1) {
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupons?page=${page}`;
       this.isLoading = true;
       this.$http.get(api).then((res) => {
         if (res.data.success) {
-          this.products = [...res.data.products];
+          this.coupons = [...res.data.coupons];
           this.pagination = { ...res.data.pagination };
         }
         this.isLoading = false;
       });
     },
-    openProductModal(item) {
-      if (item.id) this.tempProduct = { ...item };
-      else this.tempProduct = {};
-      this.$refs.productModal.show();
+    openCouponModal(item) {
+      console.log(item.id);
+      if (item.id) this.tempCoupon = { ...item };
+      else this.tempCoupon = {};
+      this.$refs.couponModal.show();
     },
-    updateProduct(item) {
-      this.tempProduct = item;
-      let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product`;
+    updateCoupon(item) {
+      this.tempCoupon = item;
+      let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupon`;
       let httpMethod = 'post';
       if (item.id) {
-        api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${item.id}`;
+        api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupon/${item.id}`;
         httpMethod = 'put';
       }
       this.isLoading = true;
-      this.$http[httpMethod](api, { data: this.tempProduct }).then((res) => {
+      this.$http[httpMethod](api, { data: this.tempCoupon }).then((res) => {
         if (res.data.success) {
-          this.getProducts();
+          this.getCoupons();
         }
-        this.$refs.productModal.hide();
+        console.log(res);
         this.isLoading = false;
+        this.$refs.couponModal.hide();
       });
     },
     openDelModal(item) {
-      this.tempProduct = item;
+      this.tempCoupon = item;
       this.$refs.delModal.show();
     },
-    delProduct(item) {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${item.id}`;
+    delCoupon(item) {
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupon/${item.id}`;
       this.isDel = true;
       this.$http.delete(api).then((res) => {
         if (res.data.success) {
-          this.getProducts();
+          this.getCoupons();
         }
-        this.$refs.delModal.hide();
         this.isDel = false;
+        this.$refs.delModal.hide();
       });
-      console.log(item);
     },
   },
   created() {
-    this.getProducts();
+    this.getCoupons();
   },
 };
 </script>

@@ -29,6 +29,10 @@ const routes = [
         path: 'adminproducts',
         component: () => import('../views/AdminProducts.vue'),
       },
+      {
+        path: 'admincoupons',
+        component: () => import('../views/AdminCoupons.vue'),
+      },
     ],
   },
 ];

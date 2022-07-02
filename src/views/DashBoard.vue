@@ -6,10 +6,10 @@
         <i class="bi bi-columns-gap d-block mb-3 mt-5"></i>
         <div class="mt-3 mb-5">商品管理</div>
       </router-link>
-      <a href="#" class="nav-link p-5 mb-3 bg-secondary text-light">
+      <router-link to="/dashboard/admincoupons" class="nav-link p-5 mb-3 bg-secondary text-light">
         <i class="bi bi-ticket-detailed d-block mb-3 mt-5"></i>
         <div class="mt-3 mb-5">優惠管理</div>
-      </a>
+      </router-link>
       <a href="#" class="nav-link p-5 mb-3 bg-secondary text-light">
         <i class="bi bi-file-text d-block mb-3 mt-5"></i>
         <div class="mt-3 mb-5">訂單管理</div>
