@@ -1,5 +1,5 @@
 <template>
-  <nav aria-label="Page navigation">
+  <nav aria-label="Page navigation" v-if="pages.total>1">
     <ul class="pagination justify-content-center">
       <li class="page-item" :class="{'disabled': !pages.has_pre}">
         <a class="page-link" href="#" aria-label="Previous"
