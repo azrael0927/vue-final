@@ -74,9 +74,9 @@
     align-items: center;
     margin: 15px 0;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     table{
-      width:700px;
+      width:992px;
     }
   }
 </style>

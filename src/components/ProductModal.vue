@@ -133,14 +133,14 @@
                 <textarea name="" id="content" class="form-control" placeholder="請輸入商品內容"
                 v-model="tempProduct.content"></textarea>
               </label>
-                <label class="form-check-label" for="is_enabled">
-                  <input class="form-check-input me-2" type="checkbox"
-                  :true-value="1"
-                  :false-value="0"
-                  v-model="tempProduct.is_enabled"
-                  id="is_enabled">
-                  啟用
-                </label>
+              <label class="form-check-label" for="is_enabled">
+                <input class="form-check-input me-2" type="checkbox"
+                :true-value="1"
+                :false-value="0"
+                v-model="tempProduct.is_enabled"
+                id="is_enabled">
+                啟用
+              </label>
             </div>
           </div>
         </div>
