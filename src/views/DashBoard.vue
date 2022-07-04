@@ -1,6 +1,7 @@
 <template>
   <NavBar />
-  <div class="container">
+  <div class="container position-relative">
+    <ToastMessages />
     <div class="d-flex fs-1 mt-5 text-center" v-if="$route.fullPath === '/dashboard'">
       <router-link to="/dashboard/adminproducts" class="nav-link p-5 mb-3 bg-secondary text-light">
         <i class="bi bi-columns-gap d-block mb-3 mt-5"></i>
@@ -48,21 +49,26 @@
   }
   .d-flex a {
     width: 95%;
+    margin: 0 auto;
   }
 }
 </style>
 
 <script>
 import NavBar from '../components/NavBar.vue';
+import ToastMessages from '../components/ToastMessages.vue';
 import emitter from '../methods/emitter';
+import updateToast from '../methods/updateToast';
 
 export default {
   components: {
     NavBar,
+    ToastMessages,
   },
   provide() {
     return {
       emitter,
+      updateToast,
     };
   },
 };

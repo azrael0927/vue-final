@@ -56,7 +56,8 @@
   :item="tempProduct"
   :del="isDel"
   @del-item="delProduct"
-  ref="delModal"/>
+  ref="delModal"
+  />
   <ProductModal
   :product="tempProduct"
   @update-product="updateProduct"
@@ -103,6 +104,7 @@ export default {
     DelModal,
     PagiNation,
   },
+  inject: ['updateToast'],
   methods: {
     getProducts(page = 1) {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`;
@@ -111,6 +113,9 @@ export default {
         if (res.data.success) {
           this.products = [...res.data.products];
           this.pagination = { ...res.data.pagination };
+          this.updateToast(res, '資料取得');
+        } else {
+          this.updateToast(res, '資料取得');
         }
         this.isLoading = false;
       });
@@ -124,14 +129,19 @@ export default {
       this.tempProduct = item;
       let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product`;
       let httpMethod = 'post';
+      let title = '新增';
       if (item.id) {
         api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${item.id}`;
         httpMethod = 'put';
+        title = '更新';
       }
       this.isLoading = true;
       this.$http[httpMethod](api, { data: this.tempProduct }).then((res) => {
         if (res.data.success) {
           this.getProducts();
+          this.updateToast(res, title);
+        } else {
+          this.updateToast(res, title);
         }
         this.$refs.productModal.hide();
         this.isLoading = false;
@@ -147,6 +157,9 @@ export default {
       this.$http.delete(api).then((res) => {
         if (res.data.success) {
           this.getProducts();
+          this.updateToast(res, '刪除');
+        } else {
+          this.updateToast(res, '刪除');
         }
         this.$refs.delModal.hide();
         this.isDel = false;

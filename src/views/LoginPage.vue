@@ -32,7 +32,6 @@
         <label for="remeberMe">
           <input
             type="checkbox"
-            name=""
             id="remeberMe"
             class="form-check-input"
             ref="remeberCheck"

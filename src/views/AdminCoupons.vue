@@ -103,6 +103,7 @@ export default {
     DelModal,
     PagiNation,
   },
+  inject: ['updateToast'],
   methods: {
     getCoupons(page = 1) {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupons?page=${page}`;
@@ -111,30 +112,36 @@ export default {
         if (res.data.success) {
           this.coupons = [...res.data.coupons];
           this.pagination = { ...res.data.pagination };
+          this.updateToast(res, '資料取得');
+        } else {
+          this.updateToast(res, '資料取得');
         }
         this.isLoading = false;
       });
     },
     openCouponModal(item) {
-      console.log(item.id);
       if (item.id) this.tempCoupon = { ...item };
-      else this.tempCoupon = {};
+      else this.tempCoupon = { is_enabled: 0 };
       this.$refs.couponModal.show();
     },
     updateCoupon(item) {
       this.tempCoupon = item;
       let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupon`;
       let httpMethod = 'post';
+      let title = '新增';
       if (item.id) {
         api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupon/${item.id}`;
         httpMethod = 'put';
+        title = '更新';
       }
       this.isLoading = true;
       this.$http[httpMethod](api, { data: this.tempCoupon }).then((res) => {
         if (res.data.success) {
           this.getCoupons();
+          this.updateToast(res, title);
+        } else {
+          this.updateToast(res, title);
         }
-        console.log(res);
         this.isLoading = false;
         this.$refs.couponModal.hide();
       });
@@ -149,6 +156,9 @@ export default {
       this.$http.delete(api).then((res) => {
         if (res.data.success) {
           this.getCoupons();
+          this.updateToast(res, '刪除');
+        } else {
+          this.updateToast(res, '刪除');
         }
         this.isDel = false;
         this.$refs.delModal.hide();
